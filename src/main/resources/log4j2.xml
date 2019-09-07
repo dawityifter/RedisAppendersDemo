@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <properties>
+        <property name="appName" value="demo"/>
+
+    </properties>
+    <Appenders>
+        <RedisAppender name="REDIS"
+                       key="log4j2-messages"
+                       host="localhost"
+                       port="6379">
+            <PatternLayout pattern="%X{traceId} %level %msg"/>
+            <RedisConnectionPoolConfig testWhileIdle="true"
+                                       minEvictableIdleTimeMillis="60000"
+                                       timeBetweenEvictionRunsMillis="30000"
+                                       numTestsPerEvictionRun="-1"/>
+            <RedisThrottlerConfig bufferSize="500"
+                                  batchSize="100"
+                                  flushPeriodMillis="1000"
+                                  maxEventCountPerSecond="100"
+                                  maxByteCountPerSecond="4194304"/>
+        </RedisAppender>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [$${ctx:appName}, %X{traceId}] [%t] %c{1} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="REDIS"/>
+        </Root>
+    </Loggers>
+</Configuration>

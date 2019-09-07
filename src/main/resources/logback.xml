@@ -1,0 +1,33 @@
+<configuration>
+    <appender name="LOGBACK_REDIS" class="com.cwbase.logback.RedisAppender">
+        <source>test-application</source>
+        <type>test</type>
+        <host>localhost</host>
+        <key>logback</key>
+        <tags>@{mdcvar1},@{mdcvar2},@{mdcvar1} @{mdcvar2} @{mdcvar3} @{mdcvar4:-foo}</tags>
+        <mdc>true</mdc>
+        <location>true</location>
+        <callerStackIndex>0</callerStackIndex>
+        <additionalField>
+            <key>traceId</key>
+            <value>%X{traceId}</value>
+        </additionalField>
+        <additionalField>
+            <key>projectName</key>
+            <value>demo</value>
+        </additionalField>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%X{traceId} - %logger{15} - %message%n%xException{5}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="application" level="DEBUG" />
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="LOGBACK_REDIS" />
+    </root>
+
+</configuration>
